@@ -71,7 +71,7 @@ export async function getOrder (req:Request, res:Response) {
     const orderWithItems = await db.select().from(ordersTable).where(eq(ordersTable.id, id)).leftJoin(orderItemsTable,eq( ordersTable.id, orderItemsTable.orderId));
 
     if(orderWithItems.length === 0){
-      res.status(500).json('Order not found');
+      res.status(404).json('Order not found');
       return;
     }
 
@@ -81,6 +81,25 @@ export async function getOrder (req:Request, res:Response) {
     }
     
     res.status(200).json(orderMerged);
+  } catch (error) {
+    console.log(error);
+    res.status(500).json(error);
+  }
+}
+
+export async function updateOrder (req:Request, res:Response) {
+  try {
+    const id = parseInt(req.params.id);
+
+    const [updateOrder] = await db.update(ordersTable).set(req.body).where(eq(ordersTable.id,id)).returning();
+
+    if(!updateOrder){
+      res.status(404).json('Order not found');
+      return;
+    }
+
+    res.status(200).json(updateOrder);
+
   } catch (error) {
     console.log(error);
     res.status(500).json(error);
