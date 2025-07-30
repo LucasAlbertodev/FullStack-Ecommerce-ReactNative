@@ -3,7 +3,7 @@ import { eq } from 'drizzle-orm';
 import _ from 'lodash';
 
 import { db } from '../../db/index';
-import { createProductSchema, productsTable } from '../../db/productsSchema';
+import {  productsTable } from '../../db/productsSchema';
 
 export async function listProducts(req: Request, res: Response) {
   try {
